@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:weather_app/utils/color.dart';
+import 'package:weather_app/views/forcast_report/forcast_report_view.dart';
 import 'package:weather_app/views/home/home_view.dart';
+import 'package:weather_app/views/search/search_view.dart';
 
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
@@ -10,8 +12,8 @@ class Home extends StatelessWidget {
   List<Widget> _buildScreens() {
     return const [
       HomeView(),
-      Scaffold(),
-      Scaffold(),
+      SearchView(),
+      ForcastReportView(),
       Scaffold(),
     ];
   }
@@ -36,18 +38,18 @@ class Home extends StatelessWidget {
       ),
       PersistentBottomNavBarItem(
         iconSize: 35,
-        inactiveIcon: const Icon(Icons.home_outlined),
+        inactiveIcon: const Icon(Icons.insights),
         icon: const Icon(
-          Icons.home_rounded,
+          Icons.insights,
         ),
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         iconSize: 35,
-        inactiveIcon: const Icon(Icons.home_outlined),
+        inactiveIcon: const Icon(Icons.settings_suggest),
         icon: const Icon(
-          Icons.home_rounded,
+          Icons.settings_suggest,
         ),
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.grey,
