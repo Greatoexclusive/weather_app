@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:weather_app/utils/color.dart';
-import 'package:weather_app/views/forcast_report/forcast_report_view.dart';
+import 'package:weather_app/views/forcast_report/forecast_report_view.dart';
 import 'package:weather_app/views/home/home_view.dart';
 import 'package:weather_app/views/search/search_view.dart';
 
@@ -10,11 +10,10 @@ class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
   List<Widget> _buildScreens() {
-    return const [
+    return [
       HomeView(),
-      SearchView(),
-      ForcastReportView(),
-      Scaffold(),
+      const SearchView(),
+      const ForcastReportView(),
     ];
   }
 
@@ -45,15 +44,15 @@ class Home extends StatelessWidget {
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        iconSize: 35,
-        inactiveIcon: const Icon(Icons.settings_suggest),
-        icon: const Icon(
-          Icons.settings_suggest,
-        ),
-        activeColorPrimary: Colors.white,
-        inactiveColorPrimary: Colors.grey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   iconSize: 35,
+      //   inactiveIcon: const Icon(Icons.settings_suggest),
+      //   icon: const Icon(
+      //     Icons.settings_suggest,
+      //   ),
+      //   activeColorPrimary: Colors.white,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
     ];
   }
 
@@ -85,7 +84,6 @@ class Home extends StatelessWidget {
         itemAnimationProperties: const ItemAnimationProperties(
           // Navigation Bar's items animation properties.
           duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
         ),
         screenTransitionAnimation: const ScreenTransitionAnimation(
           // Screen transition animation on change of selected tab.

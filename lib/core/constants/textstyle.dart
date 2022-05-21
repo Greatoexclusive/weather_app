@@ -14,7 +14,7 @@ TextStyle caption = GoogleFonts.poppins(
 );
 
 TextStyle headingMeduim = GoogleFonts.poppins(
-    fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white);
+    fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white);
 
 TextStyle captionMedium = GoogleFonts.poppins(
     fontSize: 15, fontWeight: FontWeight.w600, color: Colors.grey);

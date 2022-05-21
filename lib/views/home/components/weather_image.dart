@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class WeatherImage extends StatelessWidget {
   const WeatherImage({
     Key? key,
-    required this.image,
+    required this.weatherCondition,
   }) : super(key: key);
-  final String image;
+  final String weatherCondition;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,13 @@ class WeatherImage extends StatelessWidget {
           // height: 300,
           constraints: BoxConstraints(maxWidth: 400, maxHeight: 250),
           child: Image.asset(
-            image,
+            weatherCondition == "Rain"
+                ? "assets/rainonly.png"
+                : weatherCondition == "Clouds"
+                    ? "assets/cloud_sun.png"
+                    : weatherCondition == "Clear"
+                        ? "assets/sunny.png"
+                        : "assets/cloud_sun.png",
           )),
     );
   }

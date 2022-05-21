@@ -10,7 +10,7 @@ class HomeTab extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
           color: Colors.black.withOpacity(0.2),
         ),
         height: 40,

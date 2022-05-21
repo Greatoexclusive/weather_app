@@ -1,4 +1,4 @@
-import 'package:weather_app/constants/textstyle.dart';
+import 'package:weather_app/core/constants/textstyle.dart';
 import 'package:weather_app/utils/color.dart';
 
 import 'package:flutter/material.dart';

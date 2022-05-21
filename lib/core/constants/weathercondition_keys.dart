@@ -1,0 +1,5 @@
+class WeatherKeys {
+  static const String rainy = "Rain";
+  static const String cloudy = "Clounds";
+  static const String clear = "Clear";
+}

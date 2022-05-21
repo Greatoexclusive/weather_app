@@ -1,12 +1,23 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:weather_app/core/constants/image_keys.dart';
+import 'package:weather_app/core/constants/weathercondition_keys.dart';
 import 'package:weather_app/utils/text.dart';
 
 class NextForecastReport extends StatelessWidget {
-  const NextForecastReport({Key? key, required this.color}) : super(key: key);
+  const NextForecastReport(
+      {Key? key,
+      required this.color,
+      required this.weatherCondition,
+      required this.dayOfWeek,
+      required this.dayOfMonth,
+      required this.temp})
+      : super(key: key);
 
   final Color color;
+  final String weatherCondition;
+  final String dayOfWeek;
+  final String dayOfMonth;
+  final String temp;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +28,7 @@ class NextForecastReport extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: color,
       ),
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(18),
       height: 100,
       width: double.infinity,
       child: Row(
@@ -27,20 +38,26 @@ class NextForecastReport extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText.headingMeduim("Friday"),
-                AppText.caption("May 28,")
+                AppText.headingRegular(dayOfWeek),
+                AppText.caption(dayOfMonth)
               ]),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppText.headingRegular("30"),
+              AppText.heading(temp),
               AppText.superScript(
                 "°C",
               )
             ],
           ),
           Image.asset(
-            "assets/sunny.png",
+            weatherCondition == WeatherKeys.rainy
+                ? ImageKeys.rainy
+                : weatherCondition == WeatherKeys.cloudy
+                    ? ImageKeys.cloudy
+                    : weatherCondition == WeatherKeys.clear
+                        ? ImageKeys.clear
+                        : ImageKeys.cloudy,
           ),
         ],
       ),
