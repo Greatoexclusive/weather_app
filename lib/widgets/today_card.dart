@@ -41,7 +41,7 @@ class TodayCard extends StatelessWidget {
                           ? ImageKeys.clear
                           : ImageKeys.cloudy,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Column(

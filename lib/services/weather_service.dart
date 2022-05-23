@@ -2,29 +2,28 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  String? q = "london";
-
-  final String host = "community-open-weather-map.p.rapidapi.com";
-  final String apiKey = "c0960bc796mshcf90c309c36b93ep155b7ajsnecd96b973dee";
-  final String hostName = "X-RapidAPI-Host";
-  final String apiName = "X-RapidAPI-Key";
+  final String hostKey = "community-open-weather-map.p.rapidapi.com";
+  final String apiKey = "148d48a70fmsh276705c95335d87p1b884cjsn5d365f301f60";
+  final String host = "X-RapidAPI-Host";
+  final String api = "X-RapidAPI-Key";
   final baseURL = "https://community-open-weather-map.p.rapidapi.com";
   // WeatherService({this.q});
 
-  Future<Map<String, dynamic>> getCurrentData() async {
+  Future<Map<String, dynamic>> getCurrentData({
+    required String? q,
+  }) async {
     try {
       http.Response response = await http.get(
         Uri.parse(
           "$baseURL/weather?q=$q",
         ),
         headers: {
-          hostName: host,
-          apiName: apiKey,
+          host: hostKey,
+          api: apiKey,
         },
       );
 
       final data = jsonDecode(response.body);
-      // print(data);
 
       return data;
     } catch (e) {
@@ -34,15 +33,17 @@ class WeatherService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getNextForecast() async {
+  Future<List<Map<String, dynamic>>> getNextForecast({
+    required String? q,
+  }) async {
     try {
       http.Response response = await http.get(
         Uri.parse(
           "$baseURL/forecast?q=$q",
         ),
         headers: {
-          hostName: host,
-          apiName: apiKey,
+          host: hostKey,
+          api: apiKey,
         },
       );
 
@@ -60,15 +61,17 @@ class WeatherService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getDailyForecast() async {
+  Future<List<Map<String, dynamic>>> getDailyForecast({
+    required String? q,
+  }) async {
     try {
       http.Response response = await http.get(
         Uri.parse(
           "$baseURL/forecast/daily?q=$q",
         ),
         headers: {
-          hostName: host,
-          apiName: apiKey,
+          host: hostKey,
+          api: apiKey,
         },
       );
 

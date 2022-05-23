@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/services/current_weather_service.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
 import 'package:weather_app/views/home/home_view.dart';
@@ -7,6 +8,8 @@ class SearchBar extends StatelessWidget {
   SearchBar({Key? key, required this.isContainer}) : super(key: key);
   final bool isContainer;
   final TextEditingController _controller = TextEditingController();
+
+  final WeatherService _service = WeatherService();
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -53,8 +56,12 @@ class SearchBar extends StatelessWidget {
               : TextField(
                   onSubmitted: (value) {
                     value = _controller.text;
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => HomeView())));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => HomeView(
+                                  q: value,
+                                ))));
                   },
                   controller: _controller,
                   textInputAction: TextInputAction.search,

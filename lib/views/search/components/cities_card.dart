@@ -4,9 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/utils/text.dart';
 
 class CitiesCard extends StatelessWidget {
-  const CitiesCard({Key? key, required this.color}) : super(key: key);
+  const CitiesCard(
+      {Key? key,
+      required this.color,
+      required this.name,
+      required this.condition,
+      required this.temp})
+      : super(key: key);
 
   final Color color;
+  final String name;
+  final String condition;
+  final String temp;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +37,8 @@ class CitiesCard extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  AppText.headingRegular("30°"),
-                  AppText.headingMeduim("Cloudy"),
+                  AppText.headingRegular(temp),
+                  AppText.headingMeduim(condition),
                 ],
               ),
               Container(
@@ -40,7 +49,7 @@ class CitiesCard extends StatelessWidget {
               ),
             ],
           ),
-          AppText.headingRegular("Califonia")
+          AppText.headingRegular(name)
         ],
       ),
       // child: BackdropFilter(

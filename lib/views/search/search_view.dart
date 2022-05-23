@@ -7,10 +7,11 @@ import 'package:weather_app/views/search/components/cities_card.dart';
 import 'package:weather_app/views/search/components/search_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:weather_app/views/search/components/search_page.dart';
-import 'package:weather_app/widgets/today_card.dart';
 
 class SearchView extends StatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
+  SearchView({Key? key, required this.city}) : super(key: key);
+
+  final Map<String?, dynamic> city;
 
   @override
   State<SearchView> createState() => _SearchViewState();
@@ -18,6 +19,19 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   var selectedIndex = 0;
+
+  List<Map<dynamic, dynamic>> manageCitiesList = [];
+
+  addCity() {
+    manageCitiesList.add(widget.city);
+  }
+
+  @override
+  void initState() {
+    addCity();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,9 +57,53 @@ class _SearchViewState extends State<SearchView> {
                   const SizedBox(
                     height: 20,
                   ),
-                  AppText.heading(
-                    "Pick Location",
-                    color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              // color: kLightestColor,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        AppText.heading(
+                          "Pick Location",
+                          color: Colors.white,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              // color: kLightestColor,
+                            ),
+                            child: const InkWell(
+                              child: Icon(
+                                Icons.more_vert_outlined,
+                                color: Colors.transparent,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
@@ -101,12 +159,16 @@ class _SearchViewState extends State<SearchView> {
                                     );
                                   },
                                   child: CitiesCard(
+                                    name: manageCitiesList[index]["name"],
+                                    condition: manageCitiesList[index]
+                                        ["condition"],
+                                    temp: manageCitiesList[index]["temp"],
                                     color: index == selectedIndex
                                         ? kLightestColor
                                         : kLightestColor.withOpacity(0.1),
                                   ),
                                 ),
-                            childCount: 5),
+                            childCount: manageCitiesList.length),
                       ),
                     ),
                   ),

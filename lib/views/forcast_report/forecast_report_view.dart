@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/services/current_weather_service.dart';
@@ -9,7 +8,12 @@ import 'package:weather_app/views/forcast_report/components/next_forecast.dart';
 import 'package:weather_app/widgets/today_card.dart';
 
 class ForcastReportView extends StatefulWidget {
-  const ForcastReportView({Key? key}) : super(key: key);
+  ForcastReportView(
+      {Key? key, required this.dailyData, required this.forecastData})
+      : super(key: key);
+
+  final List<Map<String, dynamic>> forecastData;
+  final List<Map<String, dynamic>> dailyData;
 
   @override
   State<ForcastReportView> createState() => _ForcastState();
@@ -17,38 +21,10 @@ class ForcastReportView extends StatefulWidget {
 
 class _ForcastState extends State<ForcastReportView> {
   var selectedIndex = 0;
-  static final WeatherService _forecastWeatherService = WeatherService();
-  static final WeatherService _dailyWeatherService = WeatherService();
-  List<Map<String, dynamic>> forecastData = [];
-  List<Map<String, dynamic>> dailyData = [];
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () => getForecastData());
-    Future.delayed(const Duration(seconds: 2), () => getDailyData());
     super.initState();
-  }
-
-  getForecastData() async {
-    bool isLoading = true;
-    setState(() {});
-
-    forecastData = await _forecastWeatherService.getNextForecast();
-
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  getDailyData() async {
-    bool isLoading = true;
-    setState(() {});
-
-    dailyData = await _dailyWeatherService.getDailyForecast();
-
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -62,7 +38,7 @@ class _ForcastState extends State<ForcastReportView> {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+        filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: ListView(
@@ -73,9 +49,53 @@ class _ForcastState extends State<ForcastReportView> {
                   const SizedBox(
                     height: 20,
                   ),
-                  AppText.heading(
-                    "Forecast Report",
-                    color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              // color: kLightestColor,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        AppText.heading(
+                          "Forecast Report",
+                          color: Colors.white,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              // color: kLightestColor,
+                            ),
+                            child: const InkWell(
+                              child: Icon(
+                                Icons.more_vert_outlined,
+                                color: Colors.transparent,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
@@ -100,7 +120,7 @@ class _ForcastState extends State<ForcastReportView> {
                     scrollDirection: Axis.horizontal,
                     child: Row(children: [
                       ...List.generate(
-                        ((forecastData.length) / 5).toInt(),
+                        ((widget.forecastData.length) / 5).toInt(),
                         (index) => GestureDetector(
                           onTap: () {
                             setState(() {
@@ -108,13 +128,13 @@ class _ForcastState extends State<ForcastReportView> {
                             });
                           },
                           child: TodayCard(
-                            weatherCondition: forecastData[index]["weather"][0]
-                                ["main"],
+                            weatherCondition: widget.forecastData[index]
+                                ["weather"][0]["main"],
                             time: DateFormat('kk:mm').format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                    forecastData[index]["dt"] * 1000)),
+                                    widget.forecastData[index]["dt"] * 1000)),
                             temp:
-                                "${(forecastData[index]["main"]["temp"] - 273).truncate()}",
+                                "${(widget.forecastData[index]["main"]["temp"] - 273).truncate()}",
                             color: index == selectedIndex
                                 ? kLightestColor
                                 : kLightestColor.withOpacity(0.1),
@@ -131,9 +151,7 @@ class _ForcastState extends State<ForcastReportView> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            print(dailyData.length);
-                          },
+                          onTap: () {},
                           child: AppText.headingMeduim("Next Forecast"),
                         ),
                         const Spacer(),
@@ -146,18 +164,19 @@ class _ForcastState extends State<ForcastReportView> {
                     ),
                   ),
                   ...List.generate(
-                    dailyData.length,
+                    widget.dailyData.length,
                     (index) => NextForecastReport(
-                      weatherCondition: dailyData[index]["weather"][0]["main"],
+                      weatherCondition: widget.dailyData[index]["weather"][0]
+                          ["main"],
                       temp:
-                          "${(((dailyData[index]["temp"]["min"]) + ((dailyData[index]["temp"]["max"]))) / 2 - 273).truncate()}",
+                          "${(((widget.dailyData[index]["temp"]["min"]) + ((widget.dailyData[index]["temp"]["max"]))) / 2 - 273).truncate()}",
                       dayOfWeek: DateFormat('EEEE').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            dailyData[index]["dt"] * 1000),
+                            widget.dailyData[index]["dt"] * 1000),
                       ),
                       dayOfMonth: DateFormat('MMMM, dd').format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              dailyData[index]["dt"] * 1000)),
+                              widget.dailyData[index]["dt"] * 1000)),
                       color: kLightColor.withOpacity(0.1),
                     ),
                   )
