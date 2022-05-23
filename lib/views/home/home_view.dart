@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/core/constants/image_keys.dart';
 import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/utils/allFunctions.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
 import 'package:weather_app/views/forcast_report/forecast_report_view.dart';
@@ -17,34 +18,21 @@ import 'package:weather_app/views/home/components/weather_image.dart';
 class HomeView extends StatefulWidget {
   const HomeView({Key? key, this.q}) : super(key: key);
   final String? q;
-
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  //variables to hold each data to be displayed
-  Map<String, dynamic> currentData = {};
-  List<Map<String, dynamic>> forecastData = [];
-  List<Map<String, dynamic>> dailyData = [];
-
   // services inititialization
-  static final WeatherService _currentWeatherService = WeatherService();
-  static final WeatherService _forecastWeatherService = WeatherService();
-  static final WeatherService _dailyWeatherService = WeatherService();
+  static final AllFunction _allFunction = AllFunction();
+
+  //variables to hold each data to be displayed
+  Map<String, dynamic> currentData = _allFunction.currentData;
+  List<Map<String, dynamic>> forecastData = _allFunction.forecastData;
+  List<Map<String, dynamic>> dailyData = _allFunction.dailyData;
 
   bool isLoading = false;
-  final String initCity = "lagos";
 
-  // void didChangeDependencies() {
-  //   precacheImage(AssetImage("assets/sunny.png"), context);
-  //   precacheImage(AssetImage("assets/cloud_sun.png"), context);
-  //   precacheImage(AssetImage("assets/rain_only.png"), context);
-  //   precacheImage(AssetImage("assets/thunder_rain.png"),
-
-  //   context);
-  //   super.didChangeDependencies();
-  // }
   @override
   void didChangeDependencies() {
     precacheImage(const AssetImage(ImageKeys.clear), context);
@@ -56,56 +44,9 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      getCurrentData();
-      getForecastData();
-      getDailyData();
-    });
-
-    super.initState();
-  }
-
-  getCurrentData() async {
-    setState(() {
-      isLoading = true;
-    });
-    currentData = await _currentWeatherService.getCurrentData(
-        q: widget.q == null ? initCity : widget.q);
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  getForecastData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    forecastData = await _forecastWeatherService.getNextForecast(
-        q: widget.q == null ? initCity : widget.q);
-
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  getDailyData() async {
-    isLoading = true;
+    _allFunction.init(widget.q);
     setState(() {});
-
-    dailyData = await _dailyWeatherService.getDailyForecast(
-        q: widget.q == null ? initCity : widget.q);
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  onReload() {
-    Future.delayed(const Duration(seconds: 2), () {
-      getCurrentData();
-      getForecastData();
-      getDailyData();
-    });
+    super.initState();
   }
 
   var selectedIndex = 0;
@@ -123,9 +64,7 @@ class _HomeViewState extends State<HomeView> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
         child: SafeArea(
-          child: currentData.isEmpty ||
-                  forecastData.isEmpty ||
-                  dailyData.isEmpty
+          child: !isLoading
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -203,7 +142,7 @@ class _HomeViewState extends State<HomeView> {
                                       onTap: () {
                                         setState(() {
                                           currentData = {};
-                                          onReload();
+                                          _allFunction.onReload(widget.q);
                                         });
                                       },
                                       child: const Icon(
