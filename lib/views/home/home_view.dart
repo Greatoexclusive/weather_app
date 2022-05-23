@@ -2,7 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/services/current_weather_service.dart';
+import 'package:weather_app/core/constants/image_keys.dart';
+import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
 import 'package:weather_app/views/forcast_report/forecast_report_view.dart';
@@ -44,6 +45,14 @@ class _HomeViewState extends State<HomeView> {
   //   context);
   //   super.didChangeDependencies();
   // }
+  @override
+  void didChangeDependencies() {
+    precacheImage(const AssetImage(ImageKeys.clear), context);
+    precacheImage(const AssetImage(ImageKeys.cloudy), context);
+    precacheImage(const AssetImage(ImageKeys.rainy), context);
+    precacheImage(const AssetImage(ImageKeys.stormy), context);
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
@@ -52,6 +61,7 @@ class _HomeViewState extends State<HomeView> {
       getForecastData();
       getDailyData();
     });
+
     super.initState();
   }
 
@@ -124,12 +134,12 @@ class _HomeViewState extends State<HomeView> {
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
-                      child: Text('Fetching Weather Reports...'),
+                      child: const Text('Fetching Weather Reports...'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
-                    CircularProgressIndicator(),
+                    const CircularProgressIndicator(),
                   ],
                 )
               : Scaffold(
@@ -196,7 +206,7 @@ class _HomeViewState extends State<HomeView> {
                                           onReload();
                                         });
                                       },
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.refresh,
                                         color: Colors.white,
                                         size: 30,

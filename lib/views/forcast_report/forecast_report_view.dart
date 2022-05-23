@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/services/current_weather_service.dart';
+import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
 import 'package:weather_app/views/forcast_report/components/next_forecast.dart';
