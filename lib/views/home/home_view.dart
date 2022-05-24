@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/core/constants/image_keys.dart';
-import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/utils/allFunctions.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
@@ -34,18 +32,14 @@ class _HomeViewState extends State<HomeView> {
   bool isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    precacheImage(const AssetImage(ImageKeys.clear), context);
-    precacheImage(const AssetImage(ImageKeys.cloudy), context);
-    precacheImage(const AssetImage(ImageKeys.rainy), context);
-    precacheImage(const AssetImage(ImageKeys.stormy), context);
-    super.didChangeDependencies();
-  }
-
-  @override
   void initState() {
+    setState(() {
+      isLoading = true;
+    });
     _allFunction.init(widget.q);
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
     super.initState();
   }
 

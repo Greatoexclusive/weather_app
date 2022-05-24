@@ -10,7 +10,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  AllFunction _allFunction = AllFunction();
+  final AllFunction _allFunction = AllFunction();
 
   // This widget is the root of your application.
   @override
