@@ -9,7 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:weather_app/views/search/components/search_page.dart';
 
 class SearchView extends StatefulWidget {
-  SearchView({Key? key, required this.city}) : super(key: key);
+  const SearchView({Key? key, required this.city}) : super(key: key);
 
   final Map<String?, dynamic> city;
 

@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/utils/allFunctions.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/utils/text.dart';
 import 'package:weather_app/views/home/home_view.dart';
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   SearchBar({Key? key, required this.isContainer}) : super(key: key);
   final bool isContainer;
+
+  @override
+  State<SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
   final TextEditingController _controller = TextEditingController();
 
-  final WeatherService _service = WeatherService();
+  final AllFunction _allFunction = AllFunction();
+  final HomeView _homeView = HomeView();
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -19,20 +28,20 @@ class SearchBar extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-            borderRadius: isContainer == false
+            borderRadius: widget.isContainer == false
                 ? BorderRadius.circular(0)
                 : BorderRadius.circular(15),
             color: kLightColor.withOpacity(0.2),
           ),
-          margin: isContainer == false
+          margin: widget.isContainer == false
               ? const EdgeInsets.all(0)
               : const EdgeInsets.all(20),
           height: 50,
-          width: isContainer == false
+          width: widget.isContainer == false
               ? MediaQuery.of(context).size.width
               : MediaQuery.of(context).size.width -
                   (MediaQuery.of(context).size.width / 3),
-          child: isContainer == true
+          child: widget.isContainer == true
               ? Row(
                   children: [
                     const SizedBox(
@@ -56,12 +65,15 @@ class SearchBar extends StatelessWidget {
               : TextField(
                   onSubmitted: (value) {
                     value = _controller.text;
+
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => HomeView(
-                                  q: value,
-                                ))));
+                      context,
+                      MaterialPageRoute(
+                        builder: ((context) => HomeView(
+                              q: value,
+                            )),
+                      ),
+                    );
                   },
                   controller: _controller,
                   textInputAction: TextInputAction.search,
@@ -74,7 +86,7 @@ class SearchBar extends StatelessWidget {
                         // fontWeight: FontWeight.w400,
                         color: Colors.grey,
                       ),
-                      suffixIcon: isContainer == true
+                      suffixIcon: widget.isContainer == true
                           ? const Icon(
                               Icons.search,
                               color: Colors.white,
@@ -85,7 +97,7 @@ class SearchBar extends StatelessWidget {
                                 Icons.close,
                                 color: Colors.white,
                               )),
-                      prefixIcon: isContainer == true
+                      prefixIcon: widget.isContainer == true
                           ? const Icon(
                               Icons.search,
                               color: Colors.white,
@@ -100,7 +112,7 @@ class SearchBar extends StatelessWidget {
                 ),
         ),
         Visibility(
-          visible: isContainer,
+          visible: widget.isContainer,
           child: Container(
               padding: const EdgeInsets.all(5),
               clipBehavior: Clip.hardEdge,

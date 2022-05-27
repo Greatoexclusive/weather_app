@@ -25,22 +25,28 @@ class _HomeViewState extends State<HomeView> {
   static final AllFunction _allFunction = AllFunction();
 
   //variables to hold each data to be displayed
-  Map<String, dynamic> currentData = _allFunction.currentData;
-  List<Map<String, dynamic>> forecastData = _allFunction.forecastData;
-  List<Map<String, dynamic>> dailyData = _allFunction.dailyData;
-
-  bool isLoading = false;
 
   @override
   void initState() {
-    setState(() {
-      isLoading = true;
-    });
-    _allFunction.init(widget.q);
-    setState(() {
-      isLoading = false;
-    });
+    _allFunction.currentData = {};
+    setState(() {});
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        init(widget.q);
+      },
+    );
+    print("this is from home");
     super.initState();
+  }
+
+  init(q) async {
+    setState(() {});
+    await _allFunction.getCurrentData(q);
+    await _allFunction.getForecastData(q);
+    await _allFunction.getDailyData(q);
+
+    setState(() {});
   }
 
   var selectedIndex = 0;
@@ -58,7 +64,9 @@ class _HomeViewState extends State<HomeView> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
         child: SafeArea(
-          child: !isLoading
+          child: _allFunction.currentData.isEmpty ||
+                  _allFunction.forecastData.isEmpty ||
+                  _allFunction.dailyData.isEmpty
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -96,12 +104,13 @@ class _HomeViewState extends State<HomeView> {
                                         MaterialPageRoute(
                                             builder: (context) => SearchView(
                                                   city: {
-                                                    "name": currentData["name"],
+                                                    "name": _allFunction
+                                                        .currentData["name"],
                                                     "temp":
-                                                        "${(currentData["main"]["temp"] - 273).truncate()}°C",
-                                                    "condition":
-                                                        currentData["weather"]
-                                                            [0]["main"]
+                                                        "${(_allFunction.currentData["main"]["temp"] - 273).truncate()}°C",
+                                                    "condition": _allFunction
+                                                            .currentData[
+                                                        "weather"][0]["main"]
                                                   },
                                                 )));
                                   },
@@ -120,7 +129,7 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
                                 AppText.heading(
-                                  currentData["name"],
+                                  _allFunction.currentData["name"],
                                   color: Colors.white,
                                 ),
                                 InkWell(
@@ -134,10 +143,8 @@ class _HomeViewState extends State<HomeView> {
                                     ),
                                     child: InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          currentData = {};
-                                          _allFunction.onReload(widget.q);
-                                        });
+                                        _allFunction.currentData = {};
+                                        init(widget.q);
                                       },
                                       child: const Icon(
                                         Icons.refresh,
@@ -156,7 +163,7 @@ class _HomeViewState extends State<HomeView> {
                           AppText.caption(
                             DateFormat('MMMM, dd, yyyy – H:m').format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  currentData["dt"] * 1000),
+                                  _allFunction.currentData["dt"] * 1000),
                             ),
                             color: Colors.white.withOpacity(0.6),
                           ),
@@ -189,13 +196,13 @@ class _HomeViewState extends State<HomeView> {
                             height: 20,
                           ),
                           WeatherImage(
-                              weatherCondition: currentData["weather"][0]
-                                  ["main"]),
+                              weatherCondition: _allFunction
+                                  .currentData["weather"][0]["main"]),
                           const SizedBox(
                             height: 30,
                           ),
                           AppText.headingMeduim(
-                              "Weather condition: ${currentData["weather"][0]["description"]}"),
+                              "Weather condition: ${_allFunction.currentData["weather"][0]["description"]}"),
                           const SizedBox(
                             height: 30,
                           ),
@@ -205,16 +212,16 @@ class _HomeViewState extends State<HomeView> {
                               Data(
                                 title: "Temp",
                                 value:
-                                    "${(currentData["main"]["temp"] - 273).truncate()}°C",
+                                    "${(_allFunction.currentData["main"]["temp"] - 273).truncate()}°C",
                               ),
                               Data(
                                   title: "Pressure",
                                   value:
-                                      "${((currentData["main"]["pressure"]) / 33.86).truncate()}Hg"),
+                                      "${((_allFunction.currentData["main"]["pressure"]) / 33.86).truncate()}Hg"),
                               Data(
                                   title: "Humidity",
                                   value:
-                                      "${(currentData["main"]["humidity"])}%")
+                                      "${(_allFunction.currentData["main"]["humidity"])}%")
                             ],
                           ),
                           const SizedBox(
@@ -233,8 +240,10 @@ class _HomeViewState extends State<HomeView> {
                                       MaterialPageRoute(
                                         builder: ((context) =>
                                             ForcastReportView(
-                                                dailyData: dailyData,
-                                                forecastData: forecastData)),
+                                                dailyData:
+                                                    _allFunction.dailyData,
+                                                forecastData:
+                                                    _allFunction.forecastData)),
                                       ),
                                     );
                                   },
@@ -248,7 +257,7 @@ class _HomeViewState extends State<HomeView> {
                             child: Row(
                               children: [
                                 ...List.generate(
-                                  ((forecastData.length) ~/ 5),
+                                  ((_allFunction.forecastData.length) ~/ 5),
                                   (index) => GestureDetector(
                                     onTap: () {
                                       setState(
@@ -258,14 +267,17 @@ class _HomeViewState extends State<HomeView> {
                                       );
                                     },
                                     child: TodayCard(
-                                      weatherCondition: forecastData[index]
-                                          ["weather"][0]["main"],
-                                      time: DateFormat('kk:mm').format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              forecastData[index]["dt"] *
-                                                  1000)),
+                                      weatherCondition:
+                                          _allFunction.forecastData[index]
+                                              ["weather"][0]["main"],
+                                      time: DateFormat('kk:mm a').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            _allFunction.forecastData[index]
+                                                    ["dt"] *
+                                                1000),
+                                      ),
                                       temp:
-                                          "${(forecastData[index]["main"]["temp"] - 273).truncate()}",
+                                          "${(_allFunction.forecastData[index]["main"]["temp"] - 273).truncate()}",
                                       color: index == selectedIndex
                                           ? kLightestColor
                                           : kLightestColor.withOpacity(0.1),

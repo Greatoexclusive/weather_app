@@ -27,7 +27,6 @@ class WeatherService {
 
       return data;
     } catch (e) {
-      // ignore: avoid_print
       print("Error is $e");
       rethrow;
     }
